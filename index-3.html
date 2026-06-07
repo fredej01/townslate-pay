@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Townslate – Parking Payment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:   #1a2744;
+    --navy2:  #243257;
+    --blue:   #2563eb;
+    --sky:    #dbeafe;
+    --green:  #16a34a;
+    --gold:   #f59e0b;
+    --white:  #ffffff;
+    --gray50: #f8fafc;
+    --gray100:#f1f5f9;
+    --gray200:#e2e8f0;
+    --gray400:#94a3b8;
+    --gray600:#475569;
+    --gray800:#1e293b;
+    --radius: 16px;
+    --shadow: 0 4px 24px rgba(26,39,68,.13);
+  }
+
+  html, body {
+    min-height: 100%;
+    background: linear-gradient(160deg, #1a2744 0%, #243257 55%, #1e3a5f 100%);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--gray800);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 16px 40px;
+    min-height: 100dvh;
+  }
+
+  /* ── HEADER ── */
+  .ts-header {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+
+  .ts-logo {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: .08em;
+    color: rgba(255,255,255,.75);
+    text-transform: uppercase;
+  }
+
+  .ts-logo span {
+    display: inline-block;
+    width: 7px; height: 7px;
+    background: var(--gold);
+    border-radius: 50%;
+    margin-left: 4px;
+    vertical-align: middle;
+    position: relative; top: -1px;
+  }
+
+  .ts-badge {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,.5);
+    letter-spacing: .05em;
+    background: rgba(255,255,255,.08);
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--white);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  /* ── CARD TOP BAND ── */
+  .card-top {
+    background: var(--navy);
+    padding: 20px 24px 18px;
+    position: relative;
+  }
+
+  .card-top::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 14px;
+    background: var(--white);
+    border-radius: 14px 14px 0 0;
+  }
+
+  .location-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.5);
+    margin-bottom: 4px;
+  }
+
+  .location-name {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.1;
+  }
+
+  .space-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .space-pill {
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--white);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .space-meta {
+    font-size: 12px;
+    color: rgba(255,255,255,.5);
+  }
+
+  /* ── CARD BODY ── */
+  .card-body {
+    padding: 24px 24px 28px;
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--gray400);
+    margin-bottom: 12px;
+  }
+
+  /* ── DIAL ── */
+  .dial-wrap {
+    background: var(--gray50);
+    border: 1.5px solid var(--gray200);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 8px;
+    position: relative;
+  }
+
+  .dial-display {
+    text-align: center;
+    margin-bottom: 14px;
+  }
+
+  .dial-time-big {
+    font-size: 52px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.02em;
+  }
+
+  .dial-time-unit {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--gray400);
+    margin-top: 2px;
+  }
+
+  /* Slider */
+  .dial-slider-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .dial-btn {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gray200);
+    background: var(--white);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--navy);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background .15s, border-color .15s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .dial-btn:active { background: var(--gray100); border-color: var(--gray400); }
+
+  input[type=range] {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--gray200);
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--navy);
+    border: 3px solid var(--white);
+    box-shadow: 0 1px 6px rgba(26,39,68,.3);
+    cursor: pointer;
+    transition: transform .1s;
+  }
+
+  input[type=range]:active::-webkit-slider-thumb { transform: scale(1.15); }
+
+  /* Tick marks */
+  .tick-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 2px 0;
+  }
+
+  .tick {
+    font-size: 10px;
+    color: var(--gray400);
+    font-weight: 500;
+  }
+
+  /* ── PRICE ── */
+  .price-block {
+    background: var(--sky);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .price-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  .price-sub {
+    font-size: 12px;
+    color: var(--gray600);
+    margin-top: 2px;
+  }
+
+  .price-amount {
+    font-size: 38px;
+    font-weight: 700;
+    color: var(--blue);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.02em;
+    transition: color .2s;
+  }
+
+  .price-amount.zero { color: var(--gray400); }
+
+  /* ── PAY BUTTONS ── */
+  .pay-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray600);
+    margin-bottom: 10px;
+  }
+
+  .pay-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .pay-btn {
+    width: 100%;
+    height: 58px;
+    border-radius: 14px;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    letter-spacing: .01em;
+    transition: transform .12s, box-shadow .12s, opacity .12s;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pay-btn:active { transform: scale(.97); opacity: .9; }
+
+  .pay-btn.disabled {
+    opacity: .38;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .btn-cc {
+    background: var(--navy);
+    color: var(--white);
+    box-shadow: 0 4px 14px rgba(26,39,68,.28);
+  }
+
+  .btn-apple {
+    background: #000;
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(0,0,0,.22);
+  }
+
+  .btn-google {
+    background: var(--white);
+    color: var(--gray800);
+    border: 1.5px solid var(--gray200);
+    box-shadow: 0 2px 8px rgba(0,0,0,.07);
+  }
+
+  /* icons */
+  .btn-icon { width: 22px; height: 22px; flex-shrink: 0; }
+
+  /* ── FOOTER NOTE ── */
+  .footer-note {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255,255,255,.4);
+    line-height: 1.6;
+    max-width: 320px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1.5px solid var(--gray100);
+    margin: 22px 0;
+  }
+
+  /* ── PULSE animation on price ── */
+  @keyframes pricePop {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.07); }
+    100% { transform: scale(1); }
+  }
+  .price-pop { animation: pricePop .2s ease-out; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="ts-header">
+  <div class="ts-logo">Townslate<span></span></div>
+
+</header>
+
+<!-- Card -->
+<main class="card">
+
+  <!-- Top band -->
+  <div class="card-top">
+    <div class="location-name">Town of Sampleville</div>
+    <div class="space-row">
+      <div class="space-pill">Space #14</div>
+      <div class="space-meta">Main St. Lot · Zone A</div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="card-body">
+
+    <!-- Time Dial -->
+    <div class="dial-wrap">
+      <div class="dial-display">
+        <div class="dial-time-big" id="timeDisplay">0</div>
+        <div class="dial-time-unit" id="timeUnit">minutes</div>
+      </div>
+      <div class="dial-slider-row">
+        <button class="dial-btn" id="btnMinus" onclick="step(-1)" aria-label="Less time">−</button>
+        <input type="range" id="timeSlider" min="0" max="8" step="1" value="0"
+               oninput="onSlider()" aria-label="Parking duration">
+        <button class="dial-btn" id="btnPlus" onclick="step(1)" aria-label="More time">+</button>
+      </div>
+      <div class="tick-row">
+        <span class="tick">0</span>
+        <span class="tick">30m</span>
+        <span class="tick">1h</span>
+        <span class="tick">1.5h</span>
+        <span class="tick">2h</span>
+      </div>
+    </div>
+
+    <!-- Rate note -->
+    <p style="font-size:12px;color:var(--gray400);text-align:center;margin-bottom:16px;">
+      $1.50 / hour &nbsp;·&nbsp; 15-minute intervals &nbsp;·&nbsp; Max 2 hours
+    </p>
+
+    <!-- Price -->
+    <div class="price-block">
+      <div class="price-label">Total Due</div>
+      <div class="price-amount zero" id="priceDisplay">$0.00</div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Pay buttons -->
+    <div class="pay-label">Pay with:</div>
+    <div class="pay-grid">
+
+      <button class="pay-btn btn-cc disabled" id="btnCC" onclick="handlePay('Credit Card')">
+        <!-- Credit card icon -->
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="1" y="4" width="22" height="16" rx="2"/>
+          <line x1="1" y1="10" x2="23" y2="10"/>
+        </svg>
+        Credit Card
+      </button>
+
+      <button class="pay-btn btn-apple disabled" id="btnApple" onclick="handlePay('Apple Pay')">
+        <!-- Apple Pay: simple apple icon -->
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11"/>
+        </svg>
+        Apple Pay
+      </button>
+
+      <button class="pay-btn btn-google disabled" id="btnGoogle" onclick="handlePay('Google Pay')">
+        <!-- G logo -->
+        <svg class="btn-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21.35 11.1H12.18V13.83H18.69C18.36 17.64 15.19 19.27 12.19 19.27C8.36 19.27 5 16.25 5 12C5 7.9 8.2 4.73 12.2 4.73C15.29 4.73 17.1 6.7 17.1 6.7L19 4.72C19 4.72 16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12C2.03 17.05 6.16 22 12.25 22C17.6 22 21.5 18.33 21.5 12.91C21.5 11.76 21.35 11.1 21.35 11.1Z" fill="#4285F4"/>
+        </svg>
+        Google Pay
+      </button>
+
+    </div>
+  </div>
+</main>
+
+
+
+<script>
+  // --- CONFIG ---
+  const RATE_PER_HOUR = 1.50;
+  const INTERVALS = [0, 15, 30, 45, 60, 75, 90, 105, 120]; // minutes, index 0–8
+
+  // --- STATE ---
+  let stepIdx = 0;
+
+  const slider    = document.getElementById('timeSlider');
+  const timeDisp  = document.getElementById('timeDisplay');
+  const timeUnit  = document.getElementById('timeUnit');
+  const priceDsp  = document.getElementById('priceDisplay');
+  const payBtns   = [
+    document.getElementById('btnCC'),
+    document.getElementById('btnApple'),
+    document.getElementById('btnGoogle'),
+  ];
+
+  function formatTime(mins) {
+    if (mins === 0) return { big: '0', unit: 'minutes' };
+    if (mins < 60) return { big: String(mins), unit: mins === 1 ? 'minute' : 'minutes' };
+    const h = mins / 60;
+    return { big: h % 1 === 0 ? String(h) : h.toFixed(1), unit: h === 1 ? 'hour' : 'hours' };
+  }
+
+  function calcPrice(mins) {
+    return (mins / 60) * RATE_PER_HOUR;
+  }
+
+  function render() {
+    const mins = INTERVALS[stepIdx];
+    const { big, unit } = formatTime(mins);
+    timeDisp.textContent = big;
+    timeUnit.textContent = unit;
+
+    const price = calcPrice(mins);
+    const priceStr = '$' + price.toFixed(2);
+    priceDsp.textContent = priceStr;
+    priceDsp.classList.toggle('zero', mins === 0);
+
+    // Animate price pop
+    priceDsp.classList.remove('price-pop');
+    void priceDsp.offsetWidth; // reflow
+    priceDsp.classList.add('price-pop');
+
+    const enabled = mins > 0;
+    payBtns.forEach(b => b.classList.toggle('disabled', !enabled));
+
+    slider.value = stepIdx;
+  }
+
+  function step(dir) {
+    stepIdx = Math.max(0, Math.min(INTERVALS.length - 1, stepIdx + dir));
+    render();
+  }
+
+  function onSlider() {
+    stepIdx = parseInt(slider.value, 10);
+    render();
+  }
+
+  function handlePay(method) {
+    const mins = INTERVALS[stepIdx];
+    if (mins === 0) return;
+    const price = calcPrice(mins).toFixed(2);
+    alert(`[Sample Only]\n\nMethod: ${method}\nTime: ${mins} minutes\nAmount: $${price}\n\nPayment processing not yet connected.`);
+  }
+
+  render();
+</script>
+</body>
+</html>
